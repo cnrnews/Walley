@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+apply plugin: 'walle'
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        applicationId "cnaiow.imooc.com.walley"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        flavorDimensions "versionCode"
+    }
+    signingConfigs{
+        release{
+            keyAlias "key0"
+            keyPassword "common"
+            storeFile file('../keystore/common.jks')
+            storePassword "common"
+        }
+    }
+    buildTypes {
+        debug{
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        //开发环境
+        develop {
+            buildConfigField "int", "ENV_TYPE", "1"
+            applicationId 'cnaio.imooc.com.mvp.develop'
+            manifestPlaceholders = [
+                    app_name: "开-mvpDemo",
+                    app_icon: "@mipmap/ic_launcher"
+            ]
+        }
+        //测试环境
+        check {
+            buildConfigField "int","ENV_TYPE","2"
+            applicationId "cnaio.imooc.com.mvp.check"
+            manifestPlaceholders=[
+                    app_name:"测_mvpDemo",
+                    app_icon:"@mipmap/ic_launcher"
+            ]
+        }
+        //生产环境
+        product {
+            buildConfigField "int","ENV_TYPE","3"
+            applicationId "cnaio.imooc.com.mvp.product"
+            manifestPlaceholders=[
+                    app_name:"mvpDemo",
+                    app_icon:"@mipmap/ic_launcher"
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    compile 'com.meituan.android.walle:library:1.0.3'
+}
